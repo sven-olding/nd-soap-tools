@@ -1,0 +1,25 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:ifsworld-com:schemas:c_gedys_transactions_receive_contact_request">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <urn:SYNC_CONTACT>
+         <urn:CONTACTS>
+            <urn:CONTACT>
+               <urn:ACTION>@If(fl_IFSTransferNumber="";"New";"Modify")</urn:ACTION>
+               <urn:CONTACT_TYPE>@If(@Contains(@GetProfileField("gesetdatabase";"fdDbName");"KD_Contacts");"Customer";"Supplier")</urn:CONTACT_TYPE>
+               <urn:CRM_ID_CONTACT>fdMe</urn:CRM_ID_CONTACT>
+               <urn:CRM_ID_OBJECT>ParentIDs</urn:CRM_ID_OBJECT>
+               <urn:TITLE>@Trim(fdSalutatoryAddress + " " + Prefix)</urn:TITLE>
+               <urn:FIRST_NAME>FirstName</urn:FIRST_NAME>
+               <urn:MIDDLE_NAME>Suffix</urn:MIDDLE_NAME>
+               <urn:LAST_NAME>LastName</urn:LAST_NAME>
+               <urn:PHONE>MainPhone</urn:PHONE>
+               <urn:MOBILE>CellPhone</urn:MOBILE>
+               <urn:FAX>Fax</urn:FAX>
+               <urn:MAIL>EMailAddress</urn:MAIL>
+               <urn:ERRORS></urn:ERRORS>
+               <urn:ERROR_TEXT></urn:ERROR_TEXT>
+            </urn:CONTACT>
+         </urn:CONTACTS>
+      </urn:SYNC_CONTACT>
+   </soapenv:Body>
+</soapenv:Envelope>

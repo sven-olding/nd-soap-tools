@@ -1,0 +1,46 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:ifsworld-com:schemas:c_gedys_transactions_receive_business_object_request">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <urn:SYNC_BUSINESS_OBJECT>
+         <urn:BUSINESS_OBJECTS>
+            <urn:BUSINESS_OBJECT>
+               <urn:ACTION>@If(fl_IFSTransferNumber="";"New";"Modify")</urn:ACTION> 
+               <urn:GEDYS>"TRUE"</urn:GEDYS>
+               <urn:OBJECT_TYPE>@If(@Contains(@GetProfileField("gesetdatabase";"fdDbName");"KD_Contacts");"Customer";"Supplier")</urn:OBJECT_TYPE>
+               <urn:CRM_ID>fdMe</urn:CRM_ID>
+               <urn:IDENTIFIER>fl_IFSTransferNumber</urn:IDENTIFIER>
+               <urn:NAME>Company</urn:NAME>
+               <urn:DEFAULT_LANGUAGE>fdCorreLanguage</urn:DEFAULT_LANGUAGE>
+               <urn:COUNTRY>@UpperCase(@RightBack(CountryToo;"^"))</urn:COUNTRY>
+               <urn:CATEGORY>AccountType</urn:CATEGORY>
+               <urn:POTENTIAL_SEGMENT>fl_Category</urn:POTENTIAL_SEGMENT>
+               <urn:SALESMAN_BUYER>@UpperCase(@NameLookup([NoUpdate];PrimaryAccountManager;"EmployeeID"))</urn:SALESMAN_BUYER>
+               <urn:REPRESENTATIVES>@Implode(@UpperCase(@Transform(OtherManagers;"_x";@NameLookup([NoUpdate];_x;"EmployeeID")));";")</urn:REPRESENTATIVES>
+               <urn:DOCUMENT_ADDRESS1>Address1</urn:DOCUMENT_ADDRESS1>
+               <urn:DOCUMENT_ADDRESS2>Address2</urn:DOCUMENT_ADDRESS2>
+               <urn:DOCUMENT_ZIP_CODE>ZipCode</urn:DOCUMENT_ZIP_CODE>
+               <urn:DOCUMENT_CITY>City</urn:DOCUMENT_CITY>
+               <urn:DOCUMENT_COUNTY>OrgState</urn:DOCUMENT_COUNTY>
+               <urn:DOCUMENT_COUNTRY>@UpperCase(@RightBack(CountryToo;"^"))</urn:DOCUMENT_COUNTRY>
+               <urn:DELIVERY_ADDRESS1>fdSA_Address1</urn:DELIVERY_ADDRESS1>
+               <urn:DELIVERY_ADDRESS2>fdSA_Address2</urn:DELIVERY_ADDRESS2>
+               <urn:DELIVERY_ZIP_CODE>fdSA_ZIPCode</urn:DELIVERY_ZIP_CODE>
+               <urn:DELIVERY_CITY>fdSA_City</urn:DELIVERY_CITY>
+               <urn:DELIVERY_COUNTY>fdSA_OrgState</urn:DELIVERY_COUNTY>
+               <urn:DELIVERY_COUNTRY>@UpperCase(@RightBack(fdSA_CountrySel;"^"))</urn:DELIVERY_COUNTRY>
+               <urn:VISIT_ADDRESS1>fdVA_Address1</urn:VISIT_ADDRESS1>
+               <urn:VISIT_ADDRESS2>fdVA_Address2</urn:VISIT_ADDRESS2>
+               <urn:VISIT_ZIP_CODE>fdVA_ZipCode</urn:VISIT_ZIP_CODE>
+               <urn:VISIT_CITY>fdVA_City</urn:VISIT_CITY>
+               <urn:VISIT_COUNTY>fdVA_OrgState</urn:VISIT_COUNTY>
+               <urn:VISIT_COUNTRY>@UpperCase(@RightBack(fdSA_CountrySel;"^"))</urn:VISIT_COUNTRY>
+               <urn:STAT_GROUP>@Replace(@Transform(@GetProfileField("gesetkeywords";"MappingStatGroup";"web services");"_x";@If(@Left(_x;"|") = fl_Branch;@Return(@Right(_x;"|"));""));"";"CRM")</urn:STAT_GROUP>
+               <urn:SALES_AREA>fl_SalesArea</urn:SALES_AREA>
+               <urn:DATE_DEL></urn:DATE_DEL>
+               <urn:ERRORS></urn:ERRORS>
+               <urn:ERROR_TEXT></urn:ERROR_TEXT>
+            </urn:BUSINESS_OBJECT>
+         </urn:BUSINESS_OBJECTS>
+      </urn:SYNC_BUSINESS_OBJECT>
+   </soapenv:Body>
+</soapenv:Envelope>

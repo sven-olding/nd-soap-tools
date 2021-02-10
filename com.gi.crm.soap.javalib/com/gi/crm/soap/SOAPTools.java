@@ -62,12 +62,34 @@ public abstract class SOAPTools
 				"Basic " + Base64.getEncoder().encodeToString(userPass.getBytes()));
 
 		// SOAP Action Header
-		message.getMimeHeaders().addHeader("SOAPAction", soapAction);
+		if (soapAction != null && !soapAction.isEmpty()) {
+			message.getMimeHeaders().addHeader("SOAPAction", soapAction);
+		}
 
 		// Content Type
 		message.getMimeHeaders().addHeader("Content-Type", "text/xml;charset=UTF-8");
 
 		return message;
+	}
+
+	/**
+	 * Erzeugt eine SOAP Nachricht
+	 * 
+	 * @param xmlString die Nachricht als XML String
+	 * @param username Benutzername
+	 * @param password Passwort
+	 * @return die SOAP Nachricht
+	 * @throws NotesException
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
+	 * @throws IOException
+	 * @throws TransformerException
+	 * @throws SOAPException
+	 */
+	public static SOAPMessage buildMessage(String xmlString, String username, String password) throws NotesException,
+			ParserConfigurationException, SAXException, IOException, TransformerException, SOAPException
+	{
+		return buildMessage(null, xmlString, username, password);
 	}
 
 	/**

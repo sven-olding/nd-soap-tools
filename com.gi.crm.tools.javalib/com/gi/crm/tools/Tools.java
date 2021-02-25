@@ -9,6 +9,7 @@ import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -265,4 +266,24 @@ public abstract class Tools
 		return "";
 
 	} // end word()
+
+	/**
+	 * Output a Node as String
+	 * 
+	 * @param node the node
+	 * @return the node as xml string
+	 * @throws TransformerFactoryConfigurationError
+	 * @throws TransformerException
+	 */
+	public static String nodeToString(Node node) throws TransformerFactoryConfigurationError, TransformerException
+	{
+		StringWriter sw = new StringWriter();
+
+		Transformer t = TransformerFactory.newInstance().newTransformer();
+		t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+		t.setOutputProperty(OutputKeys.INDENT, "yes");
+		t.transform(new DOMSource(node), new StreamResult(sw));
+
+		return sw.toString();
+	}
 }

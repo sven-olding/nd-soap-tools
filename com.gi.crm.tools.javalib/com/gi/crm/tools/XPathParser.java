@@ -129,4 +129,16 @@ public class XPathParser
 		transformer.transform(domSource, result);
 		return writer.toString();
 	}
+
+	/**
+	 * Evaluates an expression and returns a NodeList of matching nodes
+	 * 
+	 * @param expression the XPath expression
+	 * @return list of matches
+	 * @throws XPathExpressionException if something is wrong with your expression
+	 */
+	public NodeList evaluateToNodeList(String expression) throws XPathExpressionException
+	{
+		return (NodeList) xPath.compile(expression).evaluate(xmlDocument, XPathConstants.NODESET);
+	}
 }

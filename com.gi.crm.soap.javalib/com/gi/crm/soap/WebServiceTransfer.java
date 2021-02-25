@@ -28,6 +28,11 @@ import lotus.domino.NotesException;
 import lotus.domino.Session;
 import lotus.domino.View;
 
+/**
+ * Class for sending and receiving messages via SOAP web services
+ * 
+ * @author SOL
+ */
 public class WebServiceTransfer
 {
 	private String			serviceName				= "";
@@ -54,6 +59,12 @@ public class WebServiceTransfer
 	private Vector<String>	messageTemplate			= null;
 	private Database		dbSet					= null;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param serviceName the name of the service definition to use
+	 * @param log a log object to write to
+	 */
 	public WebServiceTransfer(String serviceName, SimpleLog log)
 	{
 		this.serviceName = serviceName;
@@ -61,6 +72,9 @@ public class WebServiceTransfer
 		loadServiceDefinition();
 	}
 
+	/**
+	 * load values from configuration document
+	 */
 	@SuppressWarnings("unchecked")
 	private void loadServiceDefinition()
 	{
@@ -112,6 +126,9 @@ public class WebServiceTransfer
 
 	}
 
+	/**
+	 * Work through all service definitions with pull direction and get the data
+	 */
 	public void pullData()
 	{
 		Stack<Base> recycleList = new Stack<Base>();
@@ -152,8 +169,12 @@ public class WebServiceTransfer
 				if (contextDoc == null) {
 					log.log("No document found and option to create new docs is set to false");
 				} else {
+
 					outputMapping(nodeXml, transferDoc, contextDoc);
 					contextDoc.save();
+
+					log.log("Ok, document updated: " + contextDoc.getItemValueString("fdMe") + " ("
+							+ contextDoc.getUniversalID() + ")");
 
 					if (createDataSyncRequest) {
 						HashMap<String, Object> params = new HashMap<>();
@@ -205,6 +226,14 @@ public class WebServiceTransfer
 		}
 	}
 
+	/**
+	 * Create a new GI admin request document
+	 * 
+	 * @param requestType the request type (e.g. DataSync)
+	 * @param contextDoc the context document
+	 * @param params map with additional fields/values that will be written to the admin request
+	 * @throws NotesException if the document could not be created
+	 */
 	private void createNewAdminRequestDoc(String requestType, Document contextDoc, HashMap<String, Object> params)
 			throws NotesException
 	{
@@ -238,6 +267,12 @@ public class WebServiceTransfer
 		newDoc.save();
 	}
 
+	/**
+	 * Create a new transfer document
+	 * 
+	 * @return the new document
+	 * @throws NotesException if the document could not be created
+	 */
 	private Document createNewTransferDoc() throws NotesException
 	{
 		Document newDoc = SessionProvider.getSession().getCurrentDatabase().createDocument();
@@ -251,6 +286,13 @@ public class WebServiceTransfer
 		return newDoc;
 	}
 
+	/**
+	 * Creates a new document in the given db and evaluates the configured formulas from the service definition
+	 * 
+	 * @param db the target database
+	 * @return the new document
+	 * @throws NotesException
+	 */
 	private Document createNewDoc(Database db) throws NotesException
 	{
 		Document newDoc = db.createDocument();
@@ -268,11 +310,24 @@ public class WebServiceTransfer
 		return newDoc;
 	}
 
+	/**
+	 * Send the configured message
+	 * 
+	 * @return the response string
+	 * @throws Exception
+	 */
 	public String sendMessage() throws Exception
 	{
 		return sendMessage(null);
 	}
 
+	/**
+	 * Send the configured message
+	 * 
+	 * @param contextDoc the document on which formulas will be evaluated
+	 * @return the response string
+	 * @throws Exception
+	 */
 	@SuppressWarnings("rawtypes")
 	public String sendMessage(Document contextDoc) throws Exception
 	{
@@ -304,6 +359,19 @@ public class WebServiceTransfer
 		return SOAPTools.soapMessageToString(response);
 	}
 
+	/**
+	 * Performs the configured output mappings
+	 * 
+	 * @param responseString the service response
+	 * @param transferDoc the transfer document
+	 * @param contextDoc the context document
+	 * @throws NotesException
+	 * @throws UnsupportedEncodingException
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
+	 * @throws IOException
+	 * @throws XPathExpressionException
+	 */
 	public void outputMapping(String responseString, Document transferDoc, Document contextDoc)
 			throws NotesException, UnsupportedEncodingException, ParserConfigurationException, SAXException,
 			IOException, XPathExpressionException
@@ -353,12 +421,35 @@ public class WebServiceTransfer
 		}
 	}
 
+	/**
+	 * Get a XPathParser for given XML string
+	 * 
+	 * @param xml the xml
+	 * @return new XPathParser
+	 * @throws UnsupportedEncodingException
+	 * @throws NotesException
+	 * @throws SAXException
+	 * @throws IOException
+	 * @throws ParserConfigurationException
+	 */
 	private XPathParser getXPathParser(String xml)
 			throws UnsupportedEncodingException, NotesException, SAXException, IOException, ParserConfigurationException
 	{
 		return new XPathParser(xml, xpathDefaultPrefix, xpathDefaultNamespace);
 	}
 
+	/**
+	 * Check the given string for an error message
+	 * 
+	 * @param responseString the web service response
+	 * @return an error message or empty string if no match found
+	 * @throws UnsupportedEncodingException
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
+	 * @throws IOException
+	 * @throws XPathExpressionException
+	 * @throws NotesException
+	 */
 	public String getErrorMessageFromResponse(String responseString) throws UnsupportedEncodingException,
 			ParserConfigurationException, SAXException, IOException, XPathExpressionException, NotesException
 	{
@@ -382,6 +473,11 @@ public class WebServiceTransfer
 		return ret;
 	}
 
+	/**
+	 * Get DBSet
+	 * 
+	 * @return the database settings database
+	 */
 	private Database getDbSet()
 	{
 		if (dbSet == null) {

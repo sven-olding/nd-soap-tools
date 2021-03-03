@@ -8,6 +8,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -122,7 +123,7 @@ public abstract class SOAPTools
 		if (message != null) {
 			try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 				message.writeTo(baos);
-				result = baos.toString();
+				result = new String(baos.toByteArray(), StandardCharsets.UTF_8);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
